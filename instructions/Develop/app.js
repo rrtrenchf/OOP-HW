@@ -10,21 +10,22 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 const Choices = require("inquirer/lib/objects/choices")
-const questionArray= ["What is your occupation", "What is your ID?", "Add your School, email, or github"]
+const questionArray= ["What is your occupation", "What is your ID?", "What is your affiliation?","Add your School, email, or github"]
 class Employee {
-    constructor (manager, engineer, intern){
-    this.manager = manager,
-    this.engineer = engineer,
-    this.intern = intern
+    constructor (name,role, id, affiliate){
+    this.name=name
+    this.role = role,
+    this.id = id,
+    this.affiliate = affiliate
     }
 }
-const answers = data
+// const answers = data
 
 // Write code to use inquirer to gather information about the development team members,
 inquirer.prompt([{
     type:"list",
-    name: "occupation",
-    message: questionArray[1],
+    name: "role",
+    message: questionArray[0],
     choices: [
         "manager",
         "engineer",
@@ -38,16 +39,31 @@ inquirer.prompt([{
     
 },
 {
+    type: "list",
+    name: "affiliateChoice",
+    message: questionArray[2],
+    choices: ["email", "github","school"]
+},
+
+{
     type: "input",
-    name: "affiliate",
+    name: "affiliateInput",
     message: questionArray[3]
+
 
    
 },
 ]
 )
+let manager = new Employee (data.name, data.id, data.affiliateChoice, data.affiliateInput)
+// .then(render)({
+//     function name(params) {
+        
+//     }
+    
+// }) 
 
-.then()
+
 
 
 // and to create objects for each team member (using the correct classes as blueprints!)
