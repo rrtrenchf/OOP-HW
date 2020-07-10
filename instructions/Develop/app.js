@@ -16,7 +16,7 @@ let team = []
 // Write code to use inquirer to gather information about the development team members,
 // function
 
-addEmpl()
+
 
 
 
@@ -99,7 +99,7 @@ function addEmpl() {
 
                     
             }
-           
+           menu()
             
     }) 
     
@@ -133,43 +133,39 @@ function addEmpl() {
 function menu() {
 
     //inquirer do you want add more employees or render
-    inquirer.prompt ({
-    type: "confirm",
-    name:"addMore",
-    message: "Do you want to add another employee?",
-    // when: function(data) {
-    //     return data
-        
-       
- 
-    // }
-
-        
-    
-
-   
+    inquirer.prompt([{
+        type: "confirm",
+        name:"addMore",
+        message: "Do you want to add another employee?",
+    }])
+    .then(function(answers) {
+        if(answers.addMore == true){
+            addEmpl()
+        }else{
+            createHtml()
+        }
     })
-    // console.log(data)
-    if(answers.addMore=="Yes"){
-        addEmpl()
-    }else{
-        createHtml
-    }
-    
-}  // if yes then go to addEmp()
-    // else go createHtml()
-    
-
+}
+addEmpl()
 
 
 function createHtml() {
     var html = render(team)
-    console.log(html)
+    // console.log(html)
     // write the file
-    fs.writeFile("team.html")
+    s.writeFile(filename, answers, function(err) {
+      
+        if (err) {
+          return console.log(err);
+        }
+    
+        console.log("Success!");
+    
+      });
+    
 
 }
-
+// createHtml()
 // and to create objects for each team member (using the correct classes as blueprints!)
 
 
