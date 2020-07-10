@@ -150,10 +150,14 @@ addEmpl()
 
 
 function createHtml() {
-    var html = render(team)
+    var answers = render(team)
+    
+    // console.log(answers)
+    // console.log(data.answers)
+
     // console.log(html)
     // write the file
-    s.writeFile(filename, answers, function(err) {
+    fs.writeFile('team.html', answers, function(err) {
       
         if (err) {
           return console.log(err);
