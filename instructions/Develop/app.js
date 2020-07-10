@@ -10,76 +10,165 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 const Choices = require("inquirer/lib/objects/choices")
-const questionArray = ["What is your name?", "What is your occupation", "What is your ID?", "What is your email", "Add your School, Office, or github"]
-class Employee {
-    constructor(name, role, id, email,affiliate) {
-        this.name = name
-        this.role = role,
-        this.id = id,
-        this.email = email,
-        this.affiliate = affiliate
-    }
+
+
+let team = []
+// Write code to use inquirer to gather information about the development team members,
+// function
+
+addEmpl()
+
+
+
+function addEmpl() {
+    inquirer
+        .prompt([{
+                type: 'input',
+                message: 'What is Employee name?',
+                name: 'name'
+            },
+            {
+                type: 'input',
+                message: 'What is Employee ID?',
+                name: 'id'
+            },
+            {
+                type: 'input',
+                message: 'What is Employee Email Address?',
+                name: 'email'
+            },
+            {
+                type: 'list',
+                message: 'What is Employee Title',
+                choices: ['Manager', 'Engineer', 'Intern'],
+                name: 'Title'
+            },
+
+            {
+                type: 'input',
+                message: 'what is Employee office number?',
+                name: 'officeNumber',
+                when: function(answers) {
+                    return answers.Title === "Manager";
+                }
+
+
+            },
+            {
+                type: 'input',
+                message: 'what is Employee gitHub UserName?',
+                name: 'github',
+                when: function(answers) {
+                    return answers.Title === "Engineer";
+                }
+
+
+            },
+
+            {
+                type: 'input',
+                message: 'what school do Employee attened?',
+                name: 'school',
+                when: function(answers) {
+                    return answers.Title === "Intern";
+                }
+
+
+            }
+        
+
+
+        ])//pushing each new employee to the team array based on their "title" choice
+        
+        .then(data => {
+            //switch used to decipher employee type, each employee has a different case
+            switch (data.Title) {
+                case "Manager":
+                    const newManager = new Manager(data.name, data.id, data.email, data.officeNumber)
+
+                    team.push(newManager)
+                    break;
+                case "Engineer":
+                    const newEngineer = new Engineer(data.name, data.id, data.email, data.github)
+                    team.push(newEngineer)
+                    break;
+                case "Intern":
+                    const newIntern = new Intern(data.name, data.id, data.email, data.school)
+                    team.push(newIntern)
+                   
+
+                    
+            }
+           
+            
+    }) 
     
+    
+
+
+
+        // .then(answers => {
+
+        //     team.push(new Manager(answers.yourname, answers.id, answers.email, answers.officeNumber))
+        //     team.push(new engineer)
+
+        //     //switch to decide base on the role what class to use
+
+        //     // let manager = (answers.yourname, answers.role, answers.id, answers.email, answers.contact)
+        //     //let engineer = (answers.yourname, answers.role, answers.id, answers.email, answers.contact)
+        //     //let intern = (answers.yourname, answers.role, answers.id, answers.email, answers.contact)
+        //     // empArray = [manager, engineer, intern]
+        //     console.log(team)
+
+        //     var html = render(team)
+        //     console.log(html)
+        //  menu()
+        // })
+
 }
 
 
-// const answers = response.data
-
-// Write code to use inquirer to gather information about the development team members,
-inquirer.prompt([{
-
-    type: "input",
-    name: "yourname",
-    message: questionArray[0],
-
-},
-{
-    type: "list",
-    name: "role",
-    message: questionArray[1],
-    choices: [
-        "manager",
-        "engineer",
-        "intern",
-    ]
-},
-
-{
-    type: "input",
-    name: "id",
-    message: questionArray[2]
-
-},
-{
-    type: "input",
-    name: "email",
-    message: questionArray[3],
-    
-},
-
-{
-    type: "list",
-    name: "contact",
-    message: questionArray[4],
-    choices: ["office", "github", "school"]
-
-
-
-}]
-).then (answers =>{
-    console.log(answers)
-    render (manager,engineer,intern)
-})
-
-let manager = new Employee(answers.yourname,answers.role.manager, answers.id, answers.email, answers.contact.choices[1])
-let engineer = new Employee(answers.yourname,answers.role.engineer, answers.id, answers.email, answers.contact.choices[2])
-let intern = new Employee(answers.yourname, answers.role.intern, answers.id, answers.email, answers.contact.choices[3])
-
 // generateFile(answers)
-// console.log(data)
-// console.log(data.response)
+
+function menu() {
+
+    //inquirer do you want add more employees or render
+    inquirer.prompt ({
+    type: "confirm",
+    name:"addMore",
+    message: "Do you want to add another employee?",
+    // when: function(data) {
+    //     return data
+        
+       
+ 
+    // }
+
+        
+    
+
+   
+    })
+    // console.log(data)
+    if(answers.addMore=="Yes"){
+        addEmpl()
+    }else{
+        createHtml
+    }
+    
+}  // if yes then go to addEmp()
+    // else go createHtml()
+    
 
 
+
+function createHtml() {
+    var html = render(team)
+    console.log(html)
+    // write the file
+    fs.writeFile("team.html")
+
+}
 
 // and to create objects for each team member (using the correct classes as blueprints!)
 
@@ -88,7 +177,7 @@ let intern = new Employee(answers.yourname, answers.role.intern, answers.id, ans
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
 
-// .then (render(manager,engineer,intern))
+
 // const answers = generateFile(data)
 // fs.writeFile(answers,OUTPUT_DIR,outputPath)({
 
